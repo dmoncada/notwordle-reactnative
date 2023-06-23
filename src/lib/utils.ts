@@ -1,4 +1,22 @@
-import { LetterState, ASCII_UPPERCASE } from "./constants";
+import { LetterState } from "./LetterState";
+
+const ASCII_UPPERCASE = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+const computeWeight = (status: LetterState) => {
+  switch (status) {
+    default:
+    case "unused":
+      return 1;
+    case "used":
+      return 2;
+    case "wrong":
+      return 3;
+    case "inword":
+      return 4;
+    case "correct":
+      return 5;
+  }
+};
 
 export const computeKeyState = (target: string, guesses: string[]) => {
   const stateMap = new Map<string, LetterState>(
@@ -30,20 +48,4 @@ export const computeKeyState = (target: string, guesses: string[]) => {
   }
 
   return stateMap;
-};
-
-const computeWeight = (status: LetterState) => {
-  switch (status) {
-    default:
-    case "unused":
-      return 1;
-    case "used":
-      return 2;
-    case "wrong":
-      return 3;
-    case "inword":
-      return 4;
-    case "correct":
-      return 5;
-  }
 };
