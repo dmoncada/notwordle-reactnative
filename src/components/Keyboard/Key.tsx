@@ -1,28 +1,51 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextStyle,
-  ViewStyle,
-} from "react-native";
+import { ViewStyle } from "react-native";
+import { styled } from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import { LetterState } from "../../utils/constants";
 
 type Glyph = keyof typeof Ionicons.glyphMap;
 
-const getStyles = (state: LetterState): [ViewStyle, TextStyle] => {
+const getBackgroundColor = (state: LetterState) => {
   switch (state) {
     default:
     case "unused":
-      return [keyStyles.unused, labelStyles.unused];
+      return "#dde1ec";
     case "wrong":
-      return [keyStyles.wrong, labelStyles.wrong];
+      return "#a6aec3";
     case "inword":
-      return [keyStyles.inword, labelStyles.inword];
+      return "#ebc450";
     case "correct":
-      return [keyStyles.correct, labelStyles.correct];
+      return "#85b65d";
   }
 };
+
+const getFontColor = (state: LetterState) => {
+  switch (state) {
+    default:
+    case "unused":
+    case "used":
+      return "black";
+    case "wrong":
+    case "inword":
+    case "correct":
+      return "white";
+  }
+};
+
+const Pressable = styled.Pressable<{ state: LetterState }>`
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  border-radius: 3px;
+  background-color: ${(props) => getBackgroundColor(props.state)};
+`;
+
+const Label = styled.Text<{ state: LetterState }>`
+  font-size: 14px;
+  font-weight: bold;
+  color: ${(props) => getFontColor(props.state)};
+`;
 
 const Key = ({
   keyCode,
@@ -37,62 +60,17 @@ const Key = ({
   state?: LetterState;
   style?: ViewStyle;
 }) => {
-  const [keyStyle, labelStyle] = getStyles(state);
   const handlePress = () => onPress(keyCode);
 
   return (
-    <Pressable style={[base.key, keyStyle, style]} onPress={handlePress}>
+    <Pressable state={state} style={style} onPress={handlePress}>
       {icon ? (
         <Ionicons name={icon} size={24} />
       ) : (
-        <Text style={[base.keyLabel, labelStyle]}>{keyCode}</Text>
+        <Label state={state}>{keyCode}</Label>
       )}
     </Pressable>
   );
 };
-
-const base = StyleSheet.create({
-  key: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    minWidth: 20,
-    borderRadius: 3,
-  },
-  keyLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-});
-
-const keyStyles = StyleSheet.create({
-  unused: {
-    backgroundColor: "#dde1ec",
-  },
-  wrong: {
-    backgroundColor: "#a6aec3",
-  },
-  inword: {
-    backgroundColor: "#ebc450",
-  },
-  correct: {
-    backgroundColor: "#85b65d",
-  },
-});
-
-const labelStyles = StyleSheet.create({
-  correct: {
-    color: "white",
-  },
-  inword: {
-    color: "white",
-  },
-  wrong: {
-    color: "white",
-  },
-  unused: {
-    color: "black",
-  },
-});
 
 export default Key;

@@ -1,6 +1,6 @@
 import { LetterState, ASCII_UPPERCASE } from "./constants";
 
-export const computeKeyStatus = (target: string, guesses: string[]) => {
+export const computeKeyState = (target: string, guesses: string[]) => {
   const stateMap = new Map<string, LetterState>(
     ASCII_UPPERCASE.map((letter) => [letter, "unused"])
   );
@@ -22,7 +22,7 @@ export const computeKeyStatus = (target: string, guesses: string[]) => {
       }
 
       // Have we already seen this letter in a previous guess? If so,
-      // make sure that the weight of its status increases monotonically.
+      // make sure that the weight of its state increases monotonically.
       if (computeWeight(nextState) > computeWeight(prevState)) {
         stateMap.set(letter, nextState);
       }

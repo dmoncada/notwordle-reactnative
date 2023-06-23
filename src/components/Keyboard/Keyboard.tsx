@@ -1,7 +1,22 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { styled } from "styled-components/native";
 import { randomUUID } from "expo-crypto";
-import { computeKeyStatus } from "../../utils/computeKeyStatus";
+import { computeKeyState } from "../../utils/computeKeyState";
 import Key from "./Key";
+
+const Container = styled.View`
+  flex-direction: column;
+  padding-left: 10px;
+  padding-right: 10px;
+  gap: 4px;
+`;
+
+const Row = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  height: 35px;
+  gap: 4px;
+`;
 
 const Keyboard = ({
   target,
@@ -16,14 +31,14 @@ const Keyboard = ({
   onEnter: () => void;
   onKey: (arg: string) => void;
 }) => {
-  const stateMap = computeKeyStatus(target, guesses);
+  const stateMap = computeKeyState(target, guesses);
   const rowTop = Array.from("QWERTYUIOP");
   const rowMid = Array.from("ASDFGHJKL");
   const rowBot = Array.from("ZXCVBNM");
 
   return (
-    <View style={styles.keyboard}>
-      <View style={styles.keyRow}>
+    <Container>
+      <Row>
         {rowTop.map((keyCode) => (
           <Key
             key={randomUUID()}
@@ -32,9 +47,9 @@ const Keyboard = ({
             onPress={onKey}
           />
         ))}
-      </View>
+      </Row>
 
-      <View style={styles.keyRow}>
+      <Row>
         {rowMid.map((keyCode) => (
           <Key
             key={randomUUID()}
@@ -43,9 +58,9 @@ const Keyboard = ({
             onPress={onKey}
           />
         ))}
-      </View>
+      </Row>
 
-      <View style={styles.keyRow}>
+      <Row>
         <Key
           key={randomUUID()}
           keyCode={"BKSP"}
@@ -69,23 +84,12 @@ const Keyboard = ({
           onPress={(_) => onEnter()}
           style={styles.metaKey}
         />
-      </View>
-    </View>
+      </Row>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
-  keyboard: {
-    flexDirection: "column",
-    paddingHorizontal: 10,
-    gap: 4,
-  },
-  keyRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    height: 35,
-    gap: 4,
-  },
   metaKey: {
     minWidth: 50,
   },

@@ -1,14 +1,15 @@
-import { StyleSheet } from "react-native";
+import { styled } from "styled-components/native";
 
-export const gridStyles = StyleSheet.create({
-  grid: {
-    height: "65%",
-    flexDirection: "column",
-    gap: 4,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 4,
-  },
-});
+const Container = styled.View`
+  flex-direction: column;
+  align-items: center;
+  gap: 4;
+`;
+
+const Row = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  gap: 4;
+`;
+
+export { Container, Row };

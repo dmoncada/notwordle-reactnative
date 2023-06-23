@@ -1,7 +1,6 @@
-import { View } from "react-native";
 import { randomUUID } from "expo-crypto";
 import { LetterState } from "../../utils/constants";
-import { gridStyles } from "./GridStyles";
+import { Row } from "./GridStyles";
 import Cell from "./Cell";
 
 const getState = (
@@ -24,7 +23,7 @@ const CompletedRows = ({
   return (
     <>
       {guesses.map((guess) => (
-        <View key={randomUUID()} style={gridStyles.row}>
+        <Row key={randomUUID()}>
           {Array.from(guess).map((letter, i) => (
             <Cell
               key={randomUUID()}
@@ -32,7 +31,7 @@ const CompletedRows = ({
               state={getState(target, letter, i)}
             />
           ))}
-        </View>
+        </Row>
       ))}
     </>
   );
