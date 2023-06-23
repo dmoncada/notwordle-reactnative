@@ -5,7 +5,10 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { LetterState } from "../../utils/constants";
+
+type Glyph = keyof typeof Ionicons.glyphMap;
 
 const getStyles = (state: LetterState): [ViewStyle, TextStyle] => {
   switch (state) {
@@ -24,11 +27,13 @@ const getStyles = (state: LetterState): [ViewStyle, TextStyle] => {
 const Key = ({
   keyCode,
   onPress,
+  icon,
   state,
   style,
 }: {
   keyCode: string;
   onPress: (arg: string) => void;
+  icon?: Glyph;
   state?: LetterState;
   style?: ViewStyle;
 }) => {
@@ -37,7 +42,11 @@ const Key = ({
 
   return (
     <Pressable style={[base.key, keyStyle, style]} onPress={handlePress}>
-      <Text style={[base.keyLabel, labelStyle]}>{keyCode}</Text>
+      {icon ? (
+        <Ionicons name={icon} size={24} />
+      ) : (
+        <Text style={[base.keyLabel, labelStyle]}>{keyCode}</Text>
+      )}
     </Pressable>
   );
 };

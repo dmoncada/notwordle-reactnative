@@ -17,11 +17,14 @@ const Keyboard = ({
   onKey: (arg: string) => void;
 }) => {
   const stateMap = computeKeyStatus(target, guesses);
+  const rowTop = Array.from("QWERTYUIOP");
+  const rowMid = Array.from("ASDFGHJKL");
+  const rowBot = Array.from("ZXCVBNM");
 
   return (
     <View style={styles.keyboard}>
       <View style={styles.keyRow}>
-        {Array.from("QWERTYUIOP").map((keyCode) => (
+        {rowTop.map((keyCode) => (
           <Key
             key={randomUUID()}
             keyCode={keyCode}
@@ -32,7 +35,7 @@ const Keyboard = ({
       </View>
 
       <View style={styles.keyRow}>
-        {Array.from("ASDFGHJKL").map((keyCode) => (
+        {rowMid.map((keyCode) => (
           <Key
             key={randomUUID()}
             keyCode={keyCode}
@@ -47,10 +50,11 @@ const Keyboard = ({
           key={randomUUID()}
           keyCode={"BKSP"}
           onPress={(_) => onBack()}
+          icon="backspace-outline"
           style={styles.metaKey}
         />
 
-        {Array.from("ZXCVBNM").map((keyCode) => (
+        {rowBot.map((keyCode) => (
           <Key
             key={randomUUID()}
             keyCode={keyCode}

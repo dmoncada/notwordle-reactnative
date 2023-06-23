@@ -4,6 +4,16 @@ import { LetterState } from "../../utils/constants";
 import { gridStyles } from "./GridStyles";
 import Cell from "./Cell";
 
+const getState = (
+  target: string,
+  letter: string,
+  index: number
+): LetterState => {
+  if (letter === target[index]) return "correct";
+  if (target.includes(letter)) return "inword";
+  return "wrong";
+};
+
 const CompletedRows = ({
   target,
   guesses,
@@ -11,16 +21,6 @@ const CompletedRows = ({
   target: string;
   guesses: string[];
 }) => {
-  const getState = (
-    target: string,
-    letter: string,
-    index: number
-  ): LetterState => {
-    if (letter === target[index]) return "correct";
-    if (target.includes(letter)) return "inword";
-    return "wrong";
-  };
-
   return (
     <>
       {guesses.map((guess) => (
