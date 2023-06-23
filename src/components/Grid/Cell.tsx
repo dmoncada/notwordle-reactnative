@@ -1,50 +1,5 @@
 import { styled } from "styled-components/native";
-import { LetterState } from "../../utils/constants";
-
-const getBorderColor = (state: LetterState) => {
-  switch (state) {
-    default:
-    case "unused":
-      return "#dfe1e9";
-    case "used":
-      return "#a8adbe";
-    case "wrong":
-      return "#a6aec3";
-    case "inword":
-      return "#ebc450";
-    case "correct":
-      return "#85b65d";
-  }
-};
-
-const getBackgroundColor = (state: LetterState) => {
-  switch (state) {
-    default:
-    case "unused":
-      return "#fbfcff";
-    case "used":
-      return "#fbfcff";
-    case "wrong":
-      return "#a6aec3";
-    case "inword":
-      return "#ebc450";
-    case "correct":
-      return "#85b65d";
-  }
-};
-
-const getFontColor = (state: LetterState) => {
-  switch (state) {
-    default:
-    case "unused":
-    case "used":
-      return "black";
-    case "wrong":
-    case "inword":
-    case "correct":
-      return "white";
-  }
-};
+import { LetterState } from "../../lib/LetterState";
 
 const Container = styled.View<{ state: LetterState }>`
   width: 50px;
@@ -53,17 +8,24 @@ const Container = styled.View<{ state: LetterState }>`
   border-radius: 6px;
   align-items: center;
   justify-content: center;
-  border-color: ${(props) => getBorderColor(props.state)};
-  background-color: ${(props) => getBackgroundColor(props.state)};
+  border-color: ${({ theme, state }) =>
+    theme.cell.border[state].toString()};
+  background-color: ${({ theme, state }) =>
+    theme.cell.background[state].toString()};
 `;
 
 const Label = styled.Text<{ state: LetterState }>`
   font-size: 24px;
   font-weight: bold;
-  color: ${(props) => getFontColor(props.state)};
+  color: ${({ theme, state }) =>
+    ["wrong", "inword", "correct"].includes(state)
+      ? theme.textInverted.toString()
+      : theme.text.toString()};
 `;
 
 const Cell = ({ letter, state }: { letter?: string; state?: LetterState }) => {
+  state = state || "unused";
+
   return (
     <Container state={state}>
       <Label state={state}>{letter}</Label>

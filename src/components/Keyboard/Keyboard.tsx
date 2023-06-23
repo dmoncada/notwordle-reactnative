@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { styled } from "styled-components/native";
 import { randomUUID } from "expo-crypto";
-import { computeKeyState } from "../../utils/computeKeyState";
+import { computeKeyState } from "../../lib/utils";
 import Key from "./Key";
 
 const Container = styled.View`

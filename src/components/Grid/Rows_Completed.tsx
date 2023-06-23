@@ -1,5 +1,5 @@
 import { randomUUID } from "expo-crypto";
-import { LetterState } from "../../utils/constants";
+import { LetterState } from "../../lib/LetterState";
 import { Row } from "./GridStyles";
 import Cell from "./Cell";
 
