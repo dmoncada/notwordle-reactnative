@@ -13,9 +13,14 @@ type CellColor = {
 };
 
 type Theme = {
-  background: ColorValue;
   text: ColorValue;
   textInverted: ColorValue;
+
+  background: ColorValue;
+  toggleBackground: ColorValue;
+  activeToggleBackground: ColorValue;
+  secondaryActiveToggleBackground: ColorValue;
+
   key: KeyColor;
   cell: CellColor;
 };

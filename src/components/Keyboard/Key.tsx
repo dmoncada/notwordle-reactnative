@@ -1,9 +1,9 @@
 import { ViewStyle } from "react-native";
 import { styled, useTheme } from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { LetterState } from "../../lib/LetterState";
 
-type Glyph = keyof typeof Ionicons.glyphMap;
+type Glyph = keyof typeof Feather.glyphMap;
 
 const Pressable = styled.Pressable<{ state: LetterState }>`
   flex-grow: 1;
@@ -45,7 +45,7 @@ const Key = ({
   return (
     <Pressable state={state} style={style} onPress={handlePress}>
       {icon ? (
-        <Ionicons name={icon} size={24} color={theme.text} />
+        <Feather name={icon} size={24} color={theme.text} />
       ) : (
         <Label state={state}>{keyCode}</Label>
       )}

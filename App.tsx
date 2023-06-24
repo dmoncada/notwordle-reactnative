@@ -2,8 +2,11 @@ import { useState } from "react";
 import { StatusBar, View } from "react-native";
 import { ThemeProvider, styled } from "styled-components/native";
 import { defaultTheme, darkTheme } from "./src/lib/themes";
-import Keyboard from "./src/components/Keyboard/Keyboard";
+import Header from "./src/components/Header/Header";
 import Grid from "./src/components/Grid/Grid";
+import Keyboard from "./src/components/Keyboard/Keyboard";
+
+type ActiveView = "game" | "settings" | "help";
 
 const NUM_LETTERS: number = 5;
 const NUM_GUESSES: number = 6;
@@ -31,6 +34,7 @@ const Label = styled.Text`
 export default function App() {
   const [currentGuess, setCurrentGuess] = useState<string>("");
   const [previousGuesses, setPreviousGuesses] = useState<string[]>([]);
+  const [activeView, setActiveView] = useState<ActiveView>("game");
   const [darkMode, setDarkMode] = useState(false);
 
   const onKey = (keyPressed: string) => {
@@ -75,6 +79,10 @@ export default function App() {
     setCurrentGuess("");
   };
 
+  const switchActiveView = (nextView: ActiveView) => {
+    setActiveView(activeView === nextView ? "game" : nextView);
+  };
+
   const reset = () => {
     setPreviousGuesses([]);
     setCurrentGuess("");
@@ -86,24 +94,28 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : defaultTheme}>
+      <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
       <SafeAreaView>
-        <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
+        <Header
+          helpActive={activeView === "help"}
+          settingsActive={activeView === "settings"}
+          onHelp={() => switchActiveView("help")}
+          onSettings={() => switchActiveView("settings")}
+        />
 
-        <View style={{ height: "65%" }}>
-          <Grid
-            numCells={NUM_LETTERS}
-            numRows={NUM_GUESSES}
-            target={solution}
-            currectGuess={currentGuess}
-            previousGuesses={previousGuesses}
-          />
-        </View>
+        <Grid
+          numCells={NUM_LETTERS}
+          numRows={NUM_GUESSES}
+          target={solution}
+          currectGuess={currentGuess}
+          previousGuesses={previousGuesses}
+        />
 
         <View
           style={{
-            marginBottom: 10,
             flexDirection: "row",
             justifyContent: "space-evenly",
+            marginVertical: 10,
           }}
         >
           <Pressable onPress={reset}>

@@ -65,7 +65,7 @@ const Keyboard = ({
           key={randomUUID()}
           keyCode={"BKSP"}
           onPress={(_) => onBack()}
-          icon="backspace-outline"
+          icon="delete"
           style={styles.metaKey}
         />
 
