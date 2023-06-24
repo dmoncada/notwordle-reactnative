@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { ThemeProvider, styled } from "styled-components/native";
 import { defaultTheme, darkTheme } from "./src/lib/themes";
 import Keyboard from "./src/components/Keyboard/Keyboard";
@@ -87,6 +87,8 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? darkTheme : defaultTheme}>
       <SafeAreaView>
+        <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
+
         <View style={{ height: "65%" }}>
           <Grid
             numCells={NUM_LETTERS}
