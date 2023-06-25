@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar, View } from "react-native";
 import { ThemeProvider, styled } from "styled-components/native";
+import { Asset } from "expo-asset";
 import { defaultTheme, darkTheme } from "./src/lib/themes";
 import Header from "./src/components/Header/Header";
 import Grid from "./src/components/Grid/Grid";
@@ -8,9 +9,10 @@ import Keyboard from "./src/components/Keyboard/Keyboard";
 
 type ActiveView = "game" | "settings" | "help";
 
+const wordListFilePath = "./assets/data/wordlist.txt";
+
 const NUM_LETTERS: number = 5;
 const NUM_GUESSES: number = 6;
-const solution = "REACT";
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -32,10 +34,38 @@ const Label = styled.Text`
 `;
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [solution, setSolution] = useState("REACT");
   const [currentGuess, setCurrentGuess] = useState<string>("");
   const [previousGuesses, setPreviousGuesses] = useState<string[]>([]);
   const [activeView, setActiveView] = useState<ActiveView>("game");
   const [darkMode, setDarkMode] = useState(false);
+
+  const getTargetWordFromList = async () => {
+    try {
+      // Get the asset.
+      const [asset] = await Asset.loadAsync(require(wordListFilePath));
+
+      // Load the file.
+      const file = await fetch(asset.localUri);
+
+      // Get the content.
+      const text = await file.text();
+
+      // Make a list, keep only words of the given length.
+      const words = text.split("\n").filter((w) => w.length === NUM_LETTERS);
+
+      // Get a random word from the list.
+      const target = words[Math.floor(Math.random() * words.length)];
+
+      // Set state.
+      setSolution(target.toLocaleUpperCase());
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onKey = (keyPressed: string) => {
     if (currentGuess.length < NUM_LETTERS) {
@@ -84,6 +114,7 @@ export default function App() {
   };
 
   const reset = () => {
+    getTargetWordFromList();
     setPreviousGuesses([]);
     setCurrentGuess("");
   };
@@ -91,6 +122,12 @@ export default function App() {
   const toggleTheme = () => {
     setDarkMode(!darkMode);
   };
+
+  useEffect(() => {
+    getTargetWordFromList();
+  }, []);
+
+  if (loading) return <View />;
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : defaultTheme}>

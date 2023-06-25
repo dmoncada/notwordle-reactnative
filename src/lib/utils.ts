@@ -1,8 +1,12 @@
 import { LetterState } from "./LetterState";
 
-export const ASCII_UPPERCASE = [
-  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-] as const;
+export const ASCII_LETTERS: ReadonlyArray<string> = [
+  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+];
+
+export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_LETTERS.map(
+  (letter) => letter.toUpperCase()
+);
 
 const computeWeight = (status: LetterState) => {
   switch (status) {
