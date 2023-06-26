@@ -6,8 +6,6 @@ import Key from "./Key";
 
 const Container = styled.View`
   flex-direction: column;
-  padding-left: 10px;
-  padding-right: 10px;
   gap: 4px;
 `;
 

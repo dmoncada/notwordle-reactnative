@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
-import { ASCII_LETTERS } from "../src/lib/utils";
+import { ASCII_ALPHA } from "../src/lib/utils";
 
-const allAscii = (word: string): boolean =>
-  word && Array.from(word).every((letter) => ASCII_LETTERS.includes(letter));
+const allAlpha = (word: string): boolean =>
+  word && Array.from(word).every((letter) => ASCII_ALPHA.includes(letter));
 
 const byLength = (left: string, right: string) =>
   left.length === right.length
@@ -16,7 +16,7 @@ const createWordList = async (filePath: string): Promise<string[]> => {
     // Convert to lowercase.
     .map((word) => word.toLowerCase())
     // Filter out words with special characters.
-    .filter(allAscii);
+    .filter(allAlpha);
 
   // Remove duplicates, sort.
   return Array.from(new Set(words)).sort(byLength);

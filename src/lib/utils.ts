@@ -1,10 +1,10 @@
 import { LetterState } from "./LetterState";
 
-export const ASCII_LETTERS: ReadonlyArray<string> = [
+export const ASCII_ALPHA: ReadonlyArray<string> = [
   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
 ];
 
-export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_LETTERS.map(
+export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_ALPHA.map(
   (letter) => letter.toUpperCase()
 );
 

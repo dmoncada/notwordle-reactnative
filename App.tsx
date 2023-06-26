@@ -19,18 +19,11 @@ const SafeAreaView = styled.SafeAreaView`
   background-color: ${({ theme }) => theme.background.toString()};
 `;
 
-const Pressable = styled.Pressable`
-  width: 120px;
-  height: 40px;
-  border-radius: 5px;
-  background-color: ${({ theme }) => theme.key.background.unused.toString()};
-  align-items: center;
-  justify-content: center;
-`;
-
-const Label = styled.Text`
-  font-weight: bold;
-  color: ${({ theme }) => theme.text.toString()};
+const ViewContainer = styled.View`
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 10px;
 `;
 
 export default function App() {
@@ -41,7 +34,7 @@ export default function App() {
   const [activeView, setActiveView] = useState<ActiveView>("game");
   const [darkMode, setDarkMode] = useState(false);
 
-  const getTargetWordFromList = async () => {
+  const getTargetWordFromList = async (length: number) => {
     try {
       // Get the asset.
       const [asset] = await Asset.loadAsync(require(wordListFilePath));
@@ -53,15 +46,15 @@ export default function App() {
       const text = await file.text();
 
       // Make a list, keep only words of the given length.
-      const words = text.split("\n").filter((w) => w.length === NUM_LETTERS);
+      const words = text.split("\n").filter((w) => w.length === length);
 
       // Get a random word from the list.
       const target = words[Math.floor(Math.random() * words.length)];
 
       // Set state.
       setSolution(target.toLocaleUpperCase());
-    } catch (error) {
-      console.error(error);
+    } catch {
+      setSolution("REACT");
     } finally {
       setLoading(false);
     }
@@ -114,7 +107,7 @@ export default function App() {
   };
 
   const reset = () => {
-    getTargetWordFromList();
+    getTargetWordFromList(NUM_LETTERS);
     setPreviousGuesses([]);
     setCurrentGuess("");
   };
@@ -124,7 +117,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    getTargetWordFromList();
+    getTargetWordFromList(NUM_LETTERS);
   }, []);
 
   if (loading) return <View />;
@@ -140,37 +133,23 @@ export default function App() {
           onSettings={() => switchActiveView("settings")}
         />
 
-        <Grid
-          numCells={NUM_LETTERS}
-          numRows={NUM_GUESSES}
-          target={solution}
-          currectGuess={currentGuess}
-          previousGuesses={previousGuesses}
-        />
+        <ViewContainer>
+          <Grid
+            numCells={NUM_LETTERS}
+            numRows={NUM_GUESSES}
+            target={solution}
+            currentGuess={currentGuess}
+            previousGuesses={previousGuesses}
+          />
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            marginVertical: 10,
-          }}
-        >
-          <Pressable onPress={reset}>
-            <Label>Reset</Label>
-          </Pressable>
-
-          <Pressable onPress={toggleTheme}>
-            <Label>Toggle theme</Label>
-          </Pressable>
-        </View>
-
-        <Keyboard
-          target={solution}
-          guesses={previousGuesses}
-          onBack={onBack}
-          onEnter={onEnter}
-          onKey={onKey}
-        />
+          <Keyboard
+            target={solution}
+            guesses={previousGuesses}
+            onBack={onBack}
+            onEnter={onEnter}
+            onKey={onKey}
+          />
+        </ViewContainer>
       </SafeAreaView>
     </ThemeProvider>
   );

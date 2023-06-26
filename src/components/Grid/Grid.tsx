@@ -7,13 +7,13 @@ const Grid = ({
   numCells,
   numRows,
   target,
-  currectGuess,
+  currentGuess,
   previousGuesses,
 }: {
   numCells: number;
   numRows: number;
   target: string;
-  currectGuess: string;
+  currentGuess: string;
   previousGuesses: string[];
 }) => {
   const numInactiveRows = numRows - previousGuesses.length - 1;
@@ -21,7 +21,7 @@ const Grid = ({
   return (
     <Container>
       <CompletedRows target={target} guesses={previousGuesses} />
-      <ActiveRow numCells={numCells} guess={currectGuess} />
+      <ActiveRow numCells={numCells} guess={currentGuess} />
       <InactiveRows numCells={numCells} numRows={numInactiveRows} />
     </Container>
   );

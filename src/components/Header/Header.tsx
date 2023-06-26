@@ -8,7 +8,6 @@ const Container = styled.View`
   flex-direction: row;
   justify-content: center;
   padding: 5px 10px;
-  margin-bottom: 10px;
   border-bottom-color: ${() => colors.gray8.toString()};
   border-bottom-width: ${() => `${StyleSheet.hairlineWidth}px`};
 `;
