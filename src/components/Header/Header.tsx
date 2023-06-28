@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { styled, useTheme } from "styled-components/native";
+import { styled } from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
 import { colors } from "../../lib/colors";
 
@@ -37,9 +37,10 @@ const Pressable = styled.Pressable<{ active: boolean }>`
   height: 35px;
   border-radius: 8px;
   background-color: ${({ theme, active }) =>
-    active
-      ? theme.secondaryActiveToggleBackground.toString()
-      : theme.toggleBackground.toString()};
+    (active
+      ? theme.secondaryActiveToggleBackground
+      : theme.toggleBackground
+    ).toString()};
   align-items: center;
   justify-content: center;
 `;
@@ -50,6 +51,11 @@ const Title = styled.Text`
   color: ${({ theme }) => theme.text.toString()};
 `;
 
+const Icon = styled(Feather)<{ active?: boolean }>`
+  color: ${({ theme, active }) =>
+    (active ? colors.green1 : theme.text).toString()};
+`;
+
 const Header = ({
   title,
   helpActive,
@@ -57,21 +63,17 @@ const Header = ({
   onHelp,
   onSettings,
 }: {
-  title?: string;
+  title: string;
   helpActive: boolean;
   settingsActive: boolean;
   onHelp: () => void;
   onSettings: () => void;
 }) => {
-  const theme = useTheme();
-  const getColor = (active: boolean) => (active ? colors.green1 : theme.text);
-  title = title || "Not Wordle";
-
   return (
     <Container>
       <GroupLeft style={{ flexGrow: 1 / 4 }}>
         <Pressable active={helpActive} onPress={onHelp}>
-          <Feather name="help-circle" size={22} color={getColor(helpActive)} />
+          <Icon name="help-circle" size={22} active={helpActive} />
         </Pressable>
       </GroupLeft>
 
@@ -81,7 +83,7 @@ const Header = ({
 
       <GroupRight style={{ flexGrow: 1 / 4 }}>
         <Pressable active={settingsActive} onPress={onSettings}>
-          <Feather name="settings" size={22} color={getColor(settingsActive)} />
+          <Icon name="settings" size={22} active={settingsActive} />
         </Pressable>
       </GroupRight>
     </Container>

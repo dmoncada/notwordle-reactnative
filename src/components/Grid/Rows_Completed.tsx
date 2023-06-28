@@ -1,4 +1,4 @@
-import { randomUUID } from "expo-crypto";
+import { randomUUID as uuid } from "expo-crypto";
 import { LetterState } from "../../lib/LetterState";
 import { Row } from "./GridStyles";
 import Cell from "./Cell";
@@ -23,10 +23,10 @@ const CompletedRows = ({
   return (
     <>
       {guesses.map((guess) => (
-        <Row key={randomUUID()}>
-          {Array.from(guess).map((letter, i) => (
+        <Row key={uuid()}>
+          {Array.from(guess, (letter, i) => (
             <Cell
-              key={randomUUID()}
+              key={uuid()}
               letter={letter}
               state={getState(target, letter, i)}
             />

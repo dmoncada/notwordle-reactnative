@@ -1,4 +1,4 @@
-import { randomUUID } from "expo-crypto";
+import { randomUUID as uuid } from "expo-crypto";
 import { Row } from "./GridStyles";
 import Cell from "./Cell";
 
@@ -14,11 +14,11 @@ const InactiveRows = ({
       {Array(numRows)
         .fill("")
         .map((_) => (
-          <Row key={randomUUID()}>
+          <Row key={uuid()}>
             {Array(numCells)
               .fill("")
               .map((_) => (
-                <Cell key={randomUUID()} />
+                <Cell key={uuid()} />
               ))}
           </Row>
         ))}

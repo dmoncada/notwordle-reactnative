@@ -1,4 +1,4 @@
-import { randomUUID } from "expo-crypto";
+import { randomUUID as uuid } from "expo-crypto";
 import { Row } from "./GridStyles";
 import Cell from "./Cell";
 
@@ -16,7 +16,7 @@ const ActiveRow = ({
           .concat(Array(numCells - guess.length).fill(""))
           .map((letter) => (
             <Cell
-              key={randomUUID()}
+              key={uuid()}
               letter={letter}
               state={letter ? "used" : "unused"}
             />

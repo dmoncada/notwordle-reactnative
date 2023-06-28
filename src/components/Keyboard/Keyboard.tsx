@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { styled } from "styled-components/native";
-import { randomUUID } from "expo-crypto";
+import { randomUUID as uuid } from "expo-crypto";
 import { computeKeyState } from "../../lib/utils";
 import Key from "./Key";
 
@@ -16,6 +16,10 @@ const Row = styled.View`
   gap: 4px;
 `;
 
+const rowTop = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"] as const;
+const rowMid = ["A", "S", "D", "F", "G", "H", "J", "K", "L"] as const;
+const rowBot = ["Z", "X", "C", "V", "B", "N", "M"] as const;
+
 const Keyboard = ({
   target,
   guesses,
@@ -30,16 +34,13 @@ const Keyboard = ({
   onKey: (arg: string) => void;
 }) => {
   const stateMap = computeKeyState(target, guesses);
-  const rowTop = Array.from("QWERTYUIOP");
-  const rowMid = Array.from("ASDFGHJKL");
-  const rowBot = Array.from("ZXCVBNM");
 
   return (
     <Container>
       <Row>
         {rowTop.map((keyCode) => (
           <Key
-            key={randomUUID()}
+            key={uuid()}
             keyCode={keyCode}
             state={stateMap.get(keyCode)}
             onPress={onKey}
@@ -50,7 +51,7 @@ const Keyboard = ({
       <Row>
         {rowMid.map((keyCode) => (
           <Key
-            key={randomUUID()}
+            key={uuid()}
             keyCode={keyCode}
             state={stateMap.get(keyCode)}
             onPress={onKey}
@@ -60,16 +61,16 @@ const Keyboard = ({
 
       <Row>
         <Key
-          key={randomUUID()}
+          key={uuid()}
           keyCode={"BKSP"}
-          onPress={(_) => onBack()}
+          onPress={onBack}
           icon="delete"
           style={styles.metaKey}
         />
 
         {rowBot.map((keyCode) => (
           <Key
-            key={randomUUID()}
+            key={uuid()}
             keyCode={keyCode}
             state={stateMap.get(keyCode)}
             onPress={onKey}
@@ -77,9 +78,9 @@ const Keyboard = ({
         ))}
 
         <Key
-          key={randomUUID()}
+          key={uuid()}
           keyCode={"Enter"}
-          onPress={(_) => onEnter()}
+          onPress={onEnter}
           style={styles.metaKey}
         />
       </Row>

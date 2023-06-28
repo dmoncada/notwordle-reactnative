@@ -15,6 +15,10 @@ const Pressable = styled.Pressable<{ state: LetterState }>`
     theme.key.background[state].toString()};
 `;
 
+const Icon = styled(Feather)`
+  color: ${({ theme }) => theme.text.toString()};
+`;
+
 const Label = styled.Text<{ state: LetterState }>`
   font-size: 14px;
   font-weight: bold;
@@ -37,15 +41,13 @@ const Key = ({
   state?: LetterState;
   style?: ViewStyle;
 }) => {
-  const theme = useTheme();
   const handlePress = () => onPress(keyCode);
-
   state = state || "unused";
 
   return (
     <Pressable state={state} style={style} onPress={handlePress}>
       {icon ? (
-        <Feather name={icon} size={24} color={theme.text} />
+        <Icon name={icon} size={24} />
       ) : (
         <Label state={state}>{keyCode}</Label>
       )}
