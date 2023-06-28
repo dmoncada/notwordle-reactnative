@@ -1,3 +1,4 @@
+import { Asset } from "expo-asset";
 import { LetterState } from "./LetterState";
 
 export const ASCII_ALPHA: ReadonlyArray<string> = [
@@ -8,19 +9,37 @@ export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_ALPHA.map(
   (letter) => letter.toUpperCase()
 );
 
+export const getWordFromList = async (
+  filePath: string,
+  length: number
+): Promise<string> => {
+  // Get the asset.
+  const [asset] = await Asset.loadAsync(require(filePath));
+
+  // Load the file.
+  const file = await fetch(asset.localUri);
+
+  // Get the content.
+  const text = await file.text();
+
+  // Make a list, keep only words of the given length.
+  const words = text.split("\n").filter((w) => w.length === length);
+
+  // Get a random word from the list.
+  const target = words[Math.floor(Math.random() * words.length)];
+
+  // Convert to upper, return.
+  return target.toLocaleUpperCase();
+};
+
 const computeWeight = (status: LetterState) => {
   switch (status) {
     default:
-    case "unused":
-      return 1;
-    case "used":
-      return 2;
-    case "wrong":
-      return 3;
-    case "inword":
-      return 4;
-    case "correct":
-      return 5;
+    case "unused": return 1;
+    case "used": return 2;
+    case "wrong": return 3;
+    case "inword": return 4;
+    case "correct": return 5;
   }
 };
 

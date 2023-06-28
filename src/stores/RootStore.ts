@@ -1,8 +1,11 @@
 import { createContext, useContext } from "react";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { getTargetWordFromList } from "../lib/utils";
+import { getWordFromList } from "../lib/utils";
+
+const FILE_PATH = "../../assets/data/wordlist.txt";
 
 type Screen = "game" | "help" | "settings";
+
 type Scheme = "light" | "dark" | "system";
 
 class RootStore {
@@ -36,8 +39,7 @@ class RootStore {
   }
 
   resetAsync = async () => {
-    // const target = await getTargetWordFromList(this.numLetters);
-    const target = "REACT";
+    const target = await getWordFromList(FILE_PATH, this.numLetters);
 
     runInAction(() => {
       this.target = target;

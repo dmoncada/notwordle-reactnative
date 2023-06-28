@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { styled } from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
-import { colors } from "../../lib/colors";
+import { colors } from "../lib/colors";
 
 const Container = styled.View`
   display: flex;
