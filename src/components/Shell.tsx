@@ -21,7 +21,9 @@ const ScreenContainer = styled.View`
 `;
 
 const Shell = () => {
-  const { screen, scheme } = useStore();
+  const store = useStore();
+  const screen = store.screen;
+  const scheme = store.settings.scheme;
   const darkMode = scheme === "dark";
 
   const getScreen = (screen: Screen) => {

@@ -47,11 +47,16 @@ const Toggle = styled.Switch`
 `;
 
 const Settings = () => {
-  const { scheme, isSwapped, changeScheme, swapButtons } = useStore();
-
-  const toggleScheme = () => {
-    changeScheme(scheme === "dark" ? "light" : "dark");
-  };
+  const {
+    settings: {
+      scheme,
+      showHints,
+      swapButtons,
+      toggleScheme,
+      toggleShowHints,
+      toggleSwapButtons,
+    },
+  } = useStore();
 
   return (
     <Container>
@@ -68,20 +73,20 @@ const Settings = () => {
         </Item>
         <Item>
           <TextContainer>
-            <Heading>Letter hints</Heading>
+            <Heading>Letter Hints</Heading>
             <Description>
               Hint above the letter that it appears twice or more in the hidden
               word
             </Description>
           </TextContainer>
-          <Toggle />
+          <Toggle value={showHints} onChange={toggleShowHints} />
         </Item>
         <Item>
           <TextContainer>
             <Heading>Swap Butons</Heading>
             <Description>Swap "Enter" and "Backspace" buttons</Description>
           </TextContainer>
-          <Toggle value={isSwapped} onChange={swapButtons} />
+          <Toggle value={swapButtons} onChange={toggleSwapButtons} />
         </Item>
       </ScrollView>
     </Container>

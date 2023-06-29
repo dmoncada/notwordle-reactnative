@@ -27,9 +27,14 @@ const keysMid = rowMid.map((letter) => ({ id: uuid(), keyCode: letter }));
 const keysBot = rowBot.map((letter) => ({ id: uuid(), keyCode: letter }));
 
 const Keyboard = () => {
-  const { target, previousGuesses, isSwapped, onKey, onBack, onEnter } =
-    useStore();
-
+  const {
+    target,
+    previousGuesses,
+    onKey,
+    onBack,
+    onEnter,
+    settings: { swapButtons },
+  } = useStore();
   const stateMap = computeKeyState(target, previousGuesses);
 
   const backKey = (
@@ -76,7 +81,7 @@ const Keyboard = () => {
       </Row>
 
       <Row>
-        {isSwapped ? enterKey : backKey}
+        {swapButtons ? enterKey : backKey}
 
         {keysBot.map(({ id, keyCode }) => (
           <Key
@@ -87,7 +92,7 @@ const Keyboard = () => {
           />
         ))}
 
-        {isSwapped ? backKey : enterKey}
+        {swapButtons ? backKey : enterKey}
       </Row>
     </Container>
   );
