@@ -9,12 +9,11 @@ export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_ALPHA.map(
   (letter) => letter.toUpperCase()
 );
 
-export const getWordFromList = async (
-  filePath: string,
-  length: number
-): Promise<string> => {
+export const getWordFromList = async (length: number): Promise<string> => {
+  const FILE_PATH = "../../assets/data/wordlist.txt";
+
   // Get the asset.
-  const [asset] = await Asset.loadAsync(require(filePath));
+  const [asset] = await Asset.loadAsync(require(FILE_PATH));
 
   // Load the file.
   const file = await fetch(asset.localUri);

@@ -18,7 +18,7 @@ const Label = styled.Text<{ state: LetterState }>`
   font-size: 24px;
   font-weight: bold;
   color: ${({ theme, state }) =>
-    ["wrong", "inword", "correct"].includes(state)
+    state === 'wrong' || state === "inword" || state === "correct"
       ? theme.textInverted.toString()
       : theme.text.toString()};
 `;

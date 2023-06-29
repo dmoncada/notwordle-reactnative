@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
+import { observer } from "mobx-react-lite";
 import { styled } from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
+import { Screen, useStore } from "../stores/RootStore";
 import { colors } from "../lib/colors";
 
 const Container = styled.View`
@@ -56,19 +58,19 @@ const Icon = styled(Feather)<{ active?: boolean }>`
     (active ? colors.green1 : theme.text).toString()};
 `;
 
-const Header = ({
-  title,
-  helpActive,
-  settingsActive,
-  onHelp,
-  onSettings,
-}: {
-  title: string;
-  helpActive: boolean;
-  settingsActive: boolean;
-  onHelp: () => void;
-  onSettings: () => void;
-}) => {
+const Header = ({ title }: { title: string }) => {
+  const store = useStore();
+
+  const changeScreen = (nextScreen: Screen) => {
+    store.changeScreen(store.screen === nextScreen ? "game" : nextScreen);
+  };
+
+  const onHelp = () => changeScreen("help");
+  const onSettings = () => changeScreen("settings");
+
+  const helpActive = store.screen === "help";
+  const settingsActive = store.screen === "settings";
+
   return (
     <Container>
       <GroupLeft style={{ flexGrow: 1 / 4 }}>
@@ -90,4 +92,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export default observer(Header);
