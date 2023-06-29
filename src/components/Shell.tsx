@@ -13,7 +13,7 @@ const SafeAreaView = styled.SafeAreaView`
   background-color: ${({ theme }) => theme.background.toString()};
 `;
 
-const ViewContainer = styled.View`
+const ScreenContainer = styled.View`
   flex: 1;
   flex-direction: column;
   justify-content: space-between;
@@ -41,7 +41,7 @@ const Shell = () => {
       <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
       <SafeAreaView>
         <Header title="Not Wordle" />
-        <ViewContainer>{getScreen(screen)}</ViewContainer>
+        <ScreenContainer>{getScreen(screen)}</ScreenContainer>
       </SafeAreaView>
     </ThemeProvider>
   );

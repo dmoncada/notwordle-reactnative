@@ -1,5 +1,5 @@
 import { ViewStyle } from "react-native";
-import { styled, useTheme } from "styled-components/native";
+import { styled } from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
 import { LetterState } from "../../lib/LetterState";
 

@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
+import { observer } from "mobx-react-lite";
 import { styled } from "styled-components/native";
 import { randomUUID as uuid } from "expo-crypto";
+import { useStore } from "../../stores/RootStore";
 import { computeKeyState } from "../../lib/utils";
 import Key from "./Key";
 
@@ -20,40 +22,33 @@ const rowTop = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"] as const;
 const rowMid = ["A", "S", "D", "F", "G", "H", "J", "K", "L"] as const;
 const rowBot = ["Z", "X", "C", "V", "B", "N", "M"] as const;
 
-const Keyboard = ({
-  target,
-  guesses,
-  onBack,
-  onEnter,
-  onKey,
-}: {
-  target: string;
-  guesses: string[];
-  onBack: () => void;
-  onEnter: () => void;
-  onKey: (arg: string) => void;
-}) => {
-  const stateMap = computeKeyState(target, guesses);
+const keysTop = rowTop.map((letter) => ({ id: uuid(), keyCode: letter }));
+const keysMid = rowMid.map((letter) => ({ id: uuid(), keyCode: letter }));
+const keysBot = rowBot.map((letter) => ({ id: uuid(), keyCode: letter }));
+
+const Keyboard = () => {
+  const { target, previousGuesses, onKey, onBack, onEnter } = useStore();
+  const stateMap = computeKeyState(target, previousGuesses);
 
   return (
     <Container>
       <Row>
-        {rowTop.map((keyCode) => (
+        {keysTop.map(({ id, keyCode }) => (
           <Key
-            key={uuid()}
+            key={id}
             keyCode={keyCode}
-            state={stateMap.get(keyCode)}
+            state={stateMap[keyCode]}
             onPress={onKey}
           />
         ))}
       </Row>
 
       <Row>
-        {rowMid.map((keyCode) => (
+        {keysMid.map(({ id, keyCode }) => (
           <Key
-            key={uuid()}
+            key={id}
             keyCode={keyCode}
-            state={stateMap.get(keyCode)}
+            state={stateMap[keyCode]}
             onPress={onKey}
           />
         ))}
@@ -61,24 +56,24 @@ const Keyboard = ({
 
       <Row>
         <Key
-          key={uuid()}
+          key={"BKSP"}
           keyCode={"BKSP"}
           onPress={onBack}
           icon="delete"
           style={styles.metaKey}
         />
 
-        {rowBot.map((keyCode) => (
+        {keysBot.map(({ id, keyCode }) => (
           <Key
-            key={uuid()}
+            key={id}
             keyCode={keyCode}
-            state={stateMap.get(keyCode)}
+            state={stateMap[keyCode]}
             onPress={onKey}
           />
         ))}
 
         <Key
-          key={uuid()}
+          key={"Enter"}
           keyCode={"Enter"}
           onPress={onEnter}
           style={styles.metaKey}
@@ -94,4 +89,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Keyboard;
+export default observer(Keyboard);

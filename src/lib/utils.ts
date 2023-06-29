@@ -25,10 +25,10 @@ export const getWordFromList = async (length: number): Promise<string> => {
   const words = text.split("\n").filter((w) => w.length === length);
 
   // Get a random word from the list.
-  const target = words[Math.floor(Math.random() * words.length)];
+  const word = words[Math.floor(Math.random() * words.length)];
 
   // Convert to upper, return.
-  return target.toLocaleUpperCase();
+  return word.toLocaleUpperCase();
 };
 
 const computeWeight = (status: LetterState) => {
@@ -43,16 +43,15 @@ const computeWeight = (status: LetterState) => {
 };
 
 export const computeKeyState = (target: string, guesses: string[]) => {
-  const stateMap = new Map<string, LetterState>(
-    ASCII_UPPERCASE.map((letter) => [letter, "unused"])
-  );
+  const stateMap: { [letter: string]: LetterState } = {};
+  ASCII_UPPERCASE.forEach((letter) => (stateMap[letter] = "unused"));
 
   for (const guess of guesses) {
     for (let i = 0; i < guess.length; i++) {
       const correct = target[i];
       const letter = guess[i];
 
-      let prevState = stateMap.get(letter);
+      let prevState = stateMap[letter];
       let nextState: LetterState;
 
       if (letter === correct) {
@@ -66,7 +65,7 @@ export const computeKeyState = (target: string, guesses: string[]) => {
       // Have we already seen this letter in a previous guess? If so,
       // make sure that the weight of its state increases monotonically.
       if (computeWeight(nextState) > computeWeight(prevState)) {
-        stateMap.set(letter, nextState);
+        stateMap[letter] = nextState;
       }
     }
   }
