@@ -27,8 +27,29 @@ const keysMid = rowMid.map((letter) => ({ id: uuid(), keyCode: letter }));
 const keysBot = rowBot.map((letter) => ({ id: uuid(), keyCode: letter }));
 
 const Keyboard = () => {
-  const { target, previousGuesses, onKey, onBack, onEnter } = useStore();
+  const { target, previousGuesses, isSwapped, onKey, onBack, onEnter } =
+    useStore();
+
   const stateMap = computeKeyState(target, previousGuesses);
+
+  const backKey = (
+    <Key
+      key={"BKSP"}
+      keyCode={"BKSP"}
+      onPress={onBack}
+      icon="delete"
+      style={styles.metaKey}
+    />
+  );
+
+  const enterKey = (
+    <Key
+      key={"Enter"}
+      keyCode={"Enter"}
+      onPress={onEnter}
+      style={styles.metaKey}
+    />
+  );
 
   return (
     <Container>
@@ -55,13 +76,7 @@ const Keyboard = () => {
       </Row>
 
       <Row>
-        <Key
-          key={"BKSP"}
-          keyCode={"BKSP"}
-          onPress={onBack}
-          icon="delete"
-          style={styles.metaKey}
-        />
+        {isSwapped ? enterKey : backKey}
 
         {keysBot.map(({ id, keyCode }) => (
           <Key
@@ -72,12 +87,7 @@ const Keyboard = () => {
           />
         ))}
 
-        <Key
-          key={"Enter"}
-          keyCode={"Enter"}
-          onPress={onEnter}
-          style={styles.metaKey}
-        />
+        {isSwapped ? backKey : enterKey}
       </Row>
     </Container>
   );

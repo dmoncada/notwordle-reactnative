@@ -1,17 +1,7 @@
 import { randomUUID as uuid } from "expo-crypto";
-import { LetterState } from "../../lib/LetterState";
+import { getLetterState } from "../../lib/utils";
 import { Row } from "./GridStyles";
 import Cell from "./Cell";
-
-const getState = (
-  target: string,
-  letter: string,
-  index: number
-): LetterState => {
-  if (letter === target[index]) return "correct";
-  if (target.includes(letter)) return "inword";
-  return "wrong";
-};
 
 const CompletedRows = ({
   target,
@@ -28,7 +18,7 @@ const CompletedRows = ({
             <Cell
               key={uuid()}
               letter={letter}
-              state={getState(target, letter, i)}
+              state={getLetterState(letter, target, i)}
             />
           ))}
         </Row>

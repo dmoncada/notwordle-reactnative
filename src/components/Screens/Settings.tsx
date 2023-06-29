@@ -47,7 +47,7 @@ const Toggle = styled.Switch`
 `;
 
 const Settings = () => {
-  const { scheme, changeScheme } = useStore();
+  const { scheme, isSwapped, changeScheme, swapButtons } = useStore();
 
   const toggleScheme = () => {
     changeScheme(scheme === "dark" ? "light" : "dark");
@@ -81,7 +81,7 @@ const Settings = () => {
             <Heading>Swap Butons</Heading>
             <Description>Swap "Enter" and "Backspace" buttons</Description>
           </TextContainer>
-          <Toggle />
+          <Toggle value={isSwapped} onChange={swapButtons} />
         </Item>
       </ScrollView>
     </Container>

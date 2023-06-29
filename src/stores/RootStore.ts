@@ -14,6 +14,7 @@ class RootStore {
   previousGuesses: string[] = [];
   screen: Screen = "game";
   scheme: Scheme = "light";
+  isSwapped = false;
 
   constructor() {
     makeObservable(this, {
@@ -25,6 +26,7 @@ class RootStore {
       previousGuesses: observable,
       screen: observable,
       scheme: observable,
+      isSwapped: observable,
 
       // Actions.
       resetAsync: action,
@@ -33,6 +35,7 @@ class RootStore {
       onEnter: action,
       changeScreen: action,
       changeScheme: action,
+      swapButtons: action,
     });
   }
 
@@ -98,6 +101,10 @@ class RootStore {
     if (this.scheme !== nextScheme) {
       this.scheme = nextScheme;
     }
+  };
+
+  swapButtons = () => {
+    this.isSwapped = !this.isSwapped;
   };
 }
 
