@@ -18,34 +18,40 @@ class SettingsStore {
 
   constructor() {
     makeAutoObservable(this);
-    reaction(() => this.toJson, this.save);
-    this.load();
+
+    // Automatically save the settings to storage on change.
+    reaction(() => this.toJson, this.saveAsync);
+
+    // Load the settings from storage.
+    this.loadSettingsAsync();
   }
 
-  load = async () => {
+  saveAsync = async (json: Settings) => {
     try {
-      const settings = await AsyncStorage.getItem(SETTINGS_KEY);
-
-      if (settings !== null) {
-        const { scheme, showHints, swapButtons }: Settings =
-          JSON.parse(settings);
-
-        runInAction(() => {
-          this.scheme = scheme;
-          this.showHints = showHints;
-          this.swapButtons = swapButtons;
-        });
-      }
+      await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(json));
     } catch (error) {
       console.error(error);
     }
   };
 
-  save = async (json: Settings) => {
+  loadAsync = async (): Promise<Settings> => {
     try {
-      await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(json));
+      const settings = await AsyncStorage.getItem(SETTINGS_KEY);
+      return settings ? JSON.parse(settings) : null;
     } catch (error) {
       console.error(error);
+      return null;
+    }
+  };
+
+  loadSettingsAsync = async () => {
+    const settings = await this.loadAsync();
+    if (settings !== null) {
+      runInAction(() => {
+        this.scheme = settings.scheme;
+        this.showHints = settings.showHints;
+        this.swapButtons = settings.swapButtons;
+      });
     }
   };
 
