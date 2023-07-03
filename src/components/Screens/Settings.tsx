@@ -1,5 +1,6 @@
-import { StyleSheet } from "react-native";
+import { ListRenderItemInfo, StyleSheet } from "react-native";
 import { observer } from "mobx-react-lite";
+import { randomUUID as uuid } from "expo-crypto";
 import { styled } from "styled-components/native";
 import { useStore } from "../../stores/RootStore";
 
@@ -26,7 +27,7 @@ const Description = styled.Text`
   color: gray;
 `;
 
-const ScrollView = styled.ScrollView`
+const FlatList = styled.FlatList`
   margin: 10px;
 `;
 
@@ -46,6 +47,24 @@ const Toggle = styled.Switch`
   align-self: flex-end;
 `;
 
+type ItemProps = {
+  id: string;
+  heading: string;
+  description: string;
+  value: boolean;
+  onChange: () => void;
+};
+
+const renderItem = ({ item }: ListRenderItemInfo<ItemProps>) => (
+  <Item>
+    <TextContainer>
+      <Heading>{item.heading}</Heading>
+      <Description>{item.description}</Description>
+    </TextContainer>
+    <Toggle value={item.value} onChange={item.onChange} />
+  </Item>
+);
+
 const Settings = () => {
   const {
     settings: {
@@ -58,37 +77,40 @@ const Settings = () => {
     },
   } = useStore();
 
+  const data: ItemProps[] = [
+    {
+      id: uuid(),
+      heading: "Dark Mode",
+      description: "Change dark and light mode",
+      value: scheme === "dark",
+      onChange: toggleScheme,
+    },
+    {
+      id: uuid(),
+      heading: "Letter Hints",
+      description: "Hint above the letter that it appears twice or more in the hidden word",
+      value: showHints,
+      onChange: toggleShowHints,
+    },
+    {
+      id: uuid(),
+      heading: "Swap Buttons",
+      description: 'Swap "Enter" and "Backspace" buttons',
+      value: swapButtons,
+      onChange: toggleSwapButtons,
+    },
+  ];
+
   return (
     <Container>
       <Header>
         <Heading>Settings</Heading>
       </Header>
-      <ScrollView>
-        <Item>
-          <TextContainer>
-            <Heading>Dark Mode</Heading>
-            <Description>Change dark and light mode</Description>
-          </TextContainer>
-          <Toggle value={scheme === "dark"} onChange={toggleScheme} />
-        </Item>
-        <Item>
-          <TextContainer>
-            <Heading>Letter Hints</Heading>
-            <Description>
-              Hint above the letter that it appears twice or more in the hidden
-              word
-            </Description>
-          </TextContainer>
-          <Toggle value={showHints} onChange={toggleShowHints} />
-        </Item>
-        <Item>
-          <TextContainer>
-            <Heading>Swap Butons</Heading>
-            <Description>Swap "Enter" and "Backspace" buttons</Description>
-          </TextContainer>
-          <Toggle value={swapButtons} onChange={toggleSwapButtons} />
-        </Item>
-      </ScrollView>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item: ItemProps) => item.id}
+      />
     </Container>
   );
 };
