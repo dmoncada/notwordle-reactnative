@@ -1,9 +1,7 @@
 import { StyleSheet } from "react-native";
 import { observer } from "mobx-react-lite";
 import { styled } from "styled-components/native";
-import { randomUUID as uuid } from "expo-crypto";
 import { useStore } from "../../stores/RootStore";
-import { computeKeyState } from "../../lib/utils";
 import Key from "./Key";
 
 const Container = styled.View`
@@ -18,80 +16,65 @@ const Row = styled.View`
   gap: 4px;
 `;
 
-const rowTop = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"] as const;
-const rowMid = ["A", "S", "D", "F", "G", "H", "J", "K", "L"] as const;
-const rowBot = ["Z", "X", "C", "V", "B", "N", "M"] as const;
-
-const keysTop = rowTop.map((letter) => ({ id: uuid(), keyCode: letter }));
-const keysMid = rowMid.map((letter) => ({ id: uuid(), keyCode: letter }));
-const keysBot = rowBot.map((letter) => ({ id: uuid(), keyCode: letter }));
-
 const Keyboard = () => {
-  const {
-    target,
-    previousGuesses,
-    onKey,
-    onBack,
-    onEnter,
-    settings: { swapButtons },
-  } = useStore();
-  const stateMap = computeKeyState(target, previousGuesses);
+  const { onKey, onBack, onEnter, keyboardState, settings } = useStore();
+  const swapButtons = settings.swapButtons;
 
   const backKey = (
     <Key
-      key={"BKSP"}
-      keyCode={"BKSP"}
+      keyCode="BKSP"
+      state="unused"
+      style={styles.metaKey}
       onPress={onBack}
       icon="delete"
-      style={styles.metaKey}
     />
   );
 
   const enterKey = (
     <Key
-      key={"Enter"}
-      keyCode={"Enter"}
-      onPress={onEnter}
+      keyCode="Enter"
+      state="unused"
       style={styles.metaKey}
+      onPress={onEnter}
     />
   );
 
   return (
     <Container>
       <Row>
-        {keysTop.map(({ id, keyCode }) => (
-          <Key
-            key={id}
-            keyCode={keyCode}
-            state={stateMap[keyCode]}
-            onPress={onKey}
-          />
-        ))}
+        <Key keyCode="Q" state={keyboardState["Q"]} onPress={onKey} />
+        <Key keyCode="W" state={keyboardState["W"]} onPress={onKey} />
+        <Key keyCode="E" state={keyboardState["E"]} onPress={onKey} />
+        <Key keyCode="R" state={keyboardState["R"]} onPress={onKey} />
+        <Key keyCode="T" state={keyboardState["T"]} onPress={onKey} />
+        <Key keyCode="Y" state={keyboardState["Y"]} onPress={onKey} />
+        <Key keyCode="U" state={keyboardState["U"]} onPress={onKey} />
+        <Key keyCode="I" state={keyboardState["I"]} onPress={onKey} />
+        <Key keyCode="O" state={keyboardState["O"]} onPress={onKey} />
+        <Key keyCode="P" state={keyboardState["P"]} onPress={onKey} />
       </Row>
 
       <Row>
-        {keysMid.map(({ id, keyCode }) => (
-          <Key
-            key={id}
-            keyCode={keyCode}
-            state={stateMap[keyCode]}
-            onPress={onKey}
-          />
-        ))}
+        <Key keyCode="A" state={keyboardState["A"]} onPress={onKey} />
+        <Key keyCode="S" state={keyboardState["S"]} onPress={onKey} />
+        <Key keyCode="D" state={keyboardState["D"]} onPress={onKey} />
+        <Key keyCode="F" state={keyboardState["F"]} onPress={onKey} />
+        <Key keyCode="G" state={keyboardState["G"]} onPress={onKey} />
+        <Key keyCode="H" state={keyboardState["H"]} onPress={onKey} />
+        <Key keyCode="J" state={keyboardState["J"]} onPress={onKey} />
+        <Key keyCode="K" state={keyboardState["K"]} onPress={onKey} />
+        <Key keyCode="L" state={keyboardState["L"]} onPress={onKey} />
       </Row>
 
       <Row>
         {swapButtons ? enterKey : backKey}
-
-        {keysBot.map(({ id, keyCode }) => (
-          <Key
-            key={id}
-            keyCode={keyCode}
-            state={stateMap[keyCode]}
-            onPress={onKey}
-          />
-        ))}
-
+        <Key keyCode="Z" state={keyboardState["Z"]} onPress={onKey} />
+        <Key keyCode="X" state={keyboardState["X"]} onPress={onKey} />
+        <Key keyCode="C" state={keyboardState["C"]} onPress={onKey} />
+        <Key keyCode="V" state={keyboardState["V"]} onPress={onKey} />
+        <Key keyCode="B" state={keyboardState["B"]} onPress={onKey} />
+        <Key keyCode="N" state={keyboardState["N"]} onPress={onKey} />
+        <Key keyCode="M" state={keyboardState["M"]} onPress={onKey} />
         {swapButtons ? backKey : enterKey}
       </Row>
     </Container>

@@ -1,36 +1,53 @@
+import { Alert } from "react-native";
 import { createContext, useContext } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
 import { SettingsStore } from "./SettingsStore";
-import { getWordFromList } from "../lib/utils";
+import { LetterState } from "../lib/LetterState";
+import {
+  StateByLetter,
+  getWordFromList,
+  getGuessState,
+  getKeyboardState,
+} from "../lib/utils";
 
 type Screen = "game" | "help" | "settings";
 
+const NUM_LETTERS = 5;
+const NUM_GUESSES = 6;
+
 class RootStore {
   target = "";
-  numLetters = 5;
-  numGuesses = 6;
   currentGuess = "";
   previousGuesses: string[] = [];
+  previousGuessesState: LetterState[][] = [];
+  previousGuessesHints: number[][] = [];
+
+  keyboardState: StateByLetter = {};
   settings: SettingsStore = null;
   screen: Screen = "game";
 
   constructor() {
     makeAutoObservable(this);
+
+    // Instantiate and initialize the settings store.
     this.settings = new SettingsStore();
   }
 
   resetAsync = async () => {
-    const target = await getWordFromList(this.numLetters);
+    const target = await getWordFromList(NUM_LETTERS);
 
     runInAction(() => {
       this.target = target;
       this.currentGuess = "";
       this.previousGuesses = [];
+      this.previousGuessesState = [];
+      this.previousGuessesHints = [];
+      this.keyboardState = {};
     });
   };
 
   onKey = (keyPressed: string) => {
-    if (this.currentGuess.length < this.numLetters) {
+    if (this.currentGuess.length < NUM_LETTERS) {
       this.currentGuess = this.currentGuess + keyPressed;
     }
   };
@@ -42,7 +59,7 @@ class RootStore {
   };
 
   onEnter = () => {
-    if (this.currentGuess.length < this.numLetters) {
+    if (this.currentGuess.length < NUM_LETTERS) {
       // Word too short.
       return;
     }
@@ -62,12 +79,21 @@ class RootStore {
     //   // return;
     // }
 
-    if (this.previousGuesses.length === this.numGuesses - 1) {
+    if (this.previousGuesses.length === NUM_GUESSES - 1) {
       // Game over...
       return;
     }
 
+    // Store the current guess.
     this.previousGuesses.push(this.currentGuess);
+
+    // Compute the coloring and hint for each letter in the guess.
+    getGuessState(this.currentGuess, this.target, this.previousGuessesState, this.previousGuessesHints);
+
+    // Compute the state for each key in the keyboard.
+    getKeyboardState(this.previousGuesses, this.target, this.keyboardState);
+
+    // Clear the current guess.
     this.currentGuess = "";
   };
 
@@ -82,4 +108,11 @@ const RootStoreContext = createContext<RootStore>(null);
 const RootStoreProvider = RootStoreContext.Provider;
 const useStore = () => useContext(RootStoreContext);
 
-export { Screen, RootStore, RootStoreProvider, useStore };
+export {
+  NUM_LETTERS,
+  NUM_GUESSES,
+  Screen,
+  RootStore,
+  RootStoreProvider,
+  useStore,
+};

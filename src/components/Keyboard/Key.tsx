@@ -28,19 +28,15 @@ const Label = styled.Text<{ state: LetterState }>`
       : theme.text.toString()};
 `;
 
-const Key = ({
-  keyCode,
-  onPress,
-  icon,
-  state,
-  style,
-}: {
+type Props = {
   keyCode: string;
+  state: LetterState;
   onPress: (arg: string) => void;
   icon?: Glyph;
-  state?: LetterState;
   style?: ViewStyle;
-}) => {
+};
+
+const Key = ({ keyCode, state, onPress, icon, style }: Props) => {
   const handlePress = () => onPress(keyCode);
   state = state || "unused";
 
