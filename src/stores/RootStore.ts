@@ -21,7 +21,6 @@ class RootStore {
   previousGuesses: string[] = [];
   previousGuessesState: LetterState[][] = [];
   previousGuessesHints: number[][] = [];
-
   keyboardState: StateByLetter = {};
   settings: SettingsStore = null;
   screen: Screen = "game";
@@ -61,16 +60,26 @@ class RootStore {
   onEnter = () => {
     if (this.currentGuess.length < NUM_LETTERS) {
       // Word too short.
+      Alert.alert("Word Too Short.");
       return;
     }
 
     if (this.previousGuesses.includes(this.currentGuess)) {
       // Already guessed.
+      Alert.alert("Already Guessed.");
       return;
     }
 
     if (this.currentGuess === this.target) {
       // Guessed the word!
+      Alert.alert("You Guessed the Word!", `The word was: ${this.target}`, [
+        {
+          text: "OK",
+          style: "default",
+          onPress: () => this.resetAsync(),
+        },
+      ]);
+
       return;
     }
 
@@ -81,6 +90,14 @@ class RootStore {
 
     if (this.previousGuesses.length === NUM_GUESSES - 1) {
       // Game over...
+      Alert.alert("Game Over...", `The word was: ${this.target}`, [
+        {
+          text: "OK",
+          style: "default",
+          onPress: () => this.resetAsync(),
+        },
+      ]);
+
       return;
     }
 
