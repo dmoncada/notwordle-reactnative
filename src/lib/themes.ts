@@ -2,13 +2,18 @@ import { Theme } from "./Theme";
 import { colors } from "./colors";
 
 const defaultTheme: Theme = {
-  text: colors.black,
-  textInverted: colors.white,
+  label: colors.black,
+  inverseLabel: colors.white,
 
   background: colors.white,
-  toggleBackground: colors.gray7,
-  activeToggleBackground: colors.green1,
-  secondaryActiveToggleBackground: colors.green2,
+  surface: colors.gray7,
+  outline: colors.gray2,
+
+  primary: colors.green5,
+  onPrimary: colors.green2,
+
+  secondary: colors.blue0,
+  onSecondary: colors.blue0,
 
   key: {
     background: {
@@ -16,35 +21,41 @@ const defaultTheme: Theme = {
       used: colors.gray7,
       wrong: colors.gray5,
       inword: colors.yellow,
-      correct: colors.green1,
+      correct: colors.green2,
     },
   },
+
   cell: {
     background: {
       unused: colors.gray9,
       used: colors.gray9,
       wrong: colors.gray5,
       inword: colors.yellow,
-      correct: colors.green1,
+      correct: colors.green2,
     },
     border: {
       unused: colors.gray8,
       used: colors.gray6,
       wrong: colors.gray5,
       inword: colors.yellow,
-      correct: colors.green1,
+      correct: colors.green2,
     },
   },
 };
 
 const darkTheme: Theme = {
-  text: colors.white,
-  textInverted: colors.white,
+  label: colors.gray9,
+  inverseLabel: colors.gray9,
 
   background: colors.black,
-  toggleBackground: colors.gray3,
-  activeToggleBackground: colors.green1,
-  secondaryActiveToggleBackground: colors.green0,
+  surface: colors.gray3,
+  outline: colors.gray7,
+
+  primary: colors.green0,
+  onPrimary: colors.green2,
+
+  secondary: colors.blue0,
+  onSecondary: colors.blue0,
 
   key: {
     background: {
@@ -52,23 +63,24 @@ const darkTheme: Theme = {
       used: colors.gray3,
       wrong: colors.gray1,
       inword: colors.yellow,
-      correct: colors.green1,
+      correct: colors.green2,
     },
   },
+
   cell: {
     background: {
       unused: colors.gray0,
       used: colors.gray0,
       wrong: colors.gray1,
       inword: colors.yellow,
-      correct: colors.green1,
+      correct: colors.green2,
     },
     border: {
       unused: colors.gray2,
       used: colors.gray4,
       wrong: colors.gray1,
       inword: colors.yellow,
-      correct: colors.green1,
+      correct: colors.green2,
     },
   },
 };

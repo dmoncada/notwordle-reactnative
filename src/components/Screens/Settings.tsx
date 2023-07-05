@@ -18,7 +18,7 @@ const Header = styled.View`
 const Heading = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: ${({ theme }) => theme.text.toString()};
+  color: ${({ theme }) => theme.label.toString()};
 `;
 
 const Description = styled.Text`
@@ -61,7 +61,7 @@ const renderItem = ({ item }: ListRenderItemInfo<ItemProps>) => (
       <Heading>{item.heading}</Heading>
       <Description>{item.description}</Description>
     </TextContainer>
-    <Toggle value={item.value} onChange={item.onChange} />
+    <Toggle value={item.value} onValueChange={item.onChange} />
   </Item>
 );
 

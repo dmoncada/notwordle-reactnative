@@ -13,10 +13,9 @@ export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_ALPHA.map(
 );
 
 export const getWordFromList = async (length: number): Promise<string> => {
-  const FILE_PATH = "../../assets/data/wordlist.txt";
-
+  const module = require("../../assets/data/wordlist.txt");
   // Get the asset.
-  const [asset] = await Asset.loadAsync(require(FILE_PATH));
+  const [asset] = await Asset.loadAsync(module);
 
   // Load the file.
   const file = await fetch(asset.localUri);
@@ -34,11 +33,17 @@ export const getWordFromList = async (length: number): Promise<string> => {
   return word.toLocaleUpperCase();
 };
 
-export const getGuessState = (
+export const createKeyboardState = (): StateByLetter =>
+  ASCII_UPPERCASE.reduce((state, letter) => {
+    state[letter] = "unused";
+    return state;
+  }, {});
+
+export const updateGuessState = (
   guess: string,
   target: string,
-  stateRef: LetterState[][],
-  hintsRef: number[][]
+  guessStateRef: LetterState[][],
+  guessHintsRef: number[][]
 ): void => {
   const state: LetterState[] = Array(guess.length).fill("wrong");
   const hints: number[] = Array(guess.length).fill(0);
@@ -72,8 +77,8 @@ export const getGuessState = (
     }
   }
 
-  stateRef.push(state);
-  hintsRef.push(hints);
+  guessStateRef.push(state);
+  guessHintsRef.push(hints);
 };
 
 const getWeight = (state: LetterState) => {
@@ -84,34 +89,20 @@ const getWeight = (state: LetterState) => {
   return 1;
 };
 
-export const getKeyState = (
-  letter: string,
-  target: string,
-  index: number
-): LetterState => {
-  if (letter === target[index]) return "correct";
-  if (target.includes(letter)) return "inword";
-  return "wrong";
-};
-
-export const getKeyboardState = (
-  guesses: string[],
-  target: string,
-  stateRef: StateByLetter
+export const updateKeyboardState = (
+  guess: string,
+  guessStateRef: LetterState[],
+  keyboardStateRef: StateByLetter
 ): void => {
-  ASCII_UPPERCASE.forEach((letter) => (stateRef[letter] = "unused"));
+  for (let i = 0; i < guess.length; i++) {
+    const letter = guess[i];
+    const prevState = keyboardStateRef[letter];
+    const nextState = guessStateRef[i];
 
-  for (const guess of guesses) {
-    for (let i = 0; i < guess.length; i++) {
-      const letter = guess[i];
-      const prevState = stateRef[letter];
-      const nextState = getKeyState(letter, target, i);
-
-      // Have we already seen this letter in a previous guess? If so,
-      // make sure that the weight of its state increases monotonically.
-      if (getWeight(nextState) > getWeight(prevState)) {
-        stateRef[letter] = nextState;
-      }
+    // Have we already seen this letter in a previous guess? If so,
+    // make sure that the weight of its state increases monotonically.
+    if (getWeight(nextState) > getWeight(prevState)) {
+      keyboardStateRef[letter] = nextState;
     }
   }
 };

@@ -23,7 +23,7 @@ const Header = styled.View`
 const Heading = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: ${({ theme }) => theme.text.toString()};
+  color: ${({ theme }) => theme.label.toString()};
 `;
 
 const ScrollView = styled.ScrollView``;
@@ -65,7 +65,7 @@ export const Help = () => {
           <CompletedRow word={guess1} state={state1} />
 
           <Explainer>
-            <Text>T, B aren't in the target word at all.</Text>
+            <Text>T, B are not in the target word at all.</Text>
             <Text>A, L is in the word but in the wrong spot.</Text>
             <Text>E is in the word and in the wrong spot.</Text>
           </Explainer>

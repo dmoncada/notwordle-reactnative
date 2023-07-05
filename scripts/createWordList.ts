@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import { ASCII_ALPHA } from "../src/lib/utils";
 
 const allAlpha = (word: string): boolean =>
-  word && Array.from(word).every((letter) => ASCII_ALPHA.includes(letter));
+  word && word.split("").every((letter) => ASCII_ALPHA.includes(letter));
 
 const byLength = (left: string, right: string) =>
   left.length === right.length

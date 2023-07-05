@@ -10,7 +10,14 @@ import { darkTheme, defaultTheme } from "../lib/themes";
 
 const SafeAreaView = styled.SafeAreaView`
   flex: 1;
+  flex-direction: row;
+  justify-content: center;
   background-color: ${({ theme }) => theme.background.toString()};
+`;
+
+const MainContainer = styled.View`
+  flex: 1;
+  max-width: 600px;
 `;
 
 const ScreenContainer = styled.View`
@@ -42,8 +49,10 @@ const Shell = () => {
     <ThemeProvider theme={darkMode ? darkTheme : defaultTheme}>
       <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
       <SafeAreaView>
-        <Header title="Not Wordle" />
-        <ScreenContainer>{getScreen(screen)}</ScreenContainer>
+        <MainContainer>
+          <Header title="Not Wordle" />
+          <ScreenContainer>{getScreen(screen)}</ScreenContainer>
+        </MainContainer>
       </SafeAreaView>
     </ThemeProvider>
   );

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { observer } from "mobx-react-lite";
 import { styled } from "styled-components/native";
@@ -39,10 +40,7 @@ const Pressable = styled.Pressable<{ active: boolean }>`
   height: 35px;
   border-radius: 8px;
   background-color: ${({ theme, active }) =>
-    (active
-      ? theme.secondaryActiveToggleBackground
-      : theme.toggleBackground
-    ).toString()};
+    (active ? theme.primary : theme.surface).toString()};
   align-items: center;
   justify-content: center;
 `;
@@ -50,31 +48,35 @@ const Pressable = styled.Pressable<{ active: boolean }>`
 const Title = styled.Text`
   font-size: 28px;
   font-weight: bold;
-  color: ${({ theme }) => theme.text.toString()};
+  color: ${({ theme }) => theme.label.toString()};
 `;
 
 const Icon = styled(Feather)<{ active?: boolean }>`
   color: ${({ theme, active }) =>
-    (active ? colors.green1 : theme.text).toString()};
+    (active ? theme.onPrimary : theme.outline).toString()};
 `;
 
 const Header = ({ title }: { title: string }) => {
-  const store = useStore();
+  const { screen, changeScreen } = useStore();
+  const [helpHovered, setHelpHovered] = useState(false);
+  const [settingsHovered, setSettingsHovered] = useState(false);
 
-  const changeScreen = (nextScreen: Screen) => {
-    store.changeScreen(store.screen === nextScreen ? "game" : nextScreen);
+  const helpActive = helpHovered || screen === "help";
+  const settingsActive = settingsHovered || screen === "settings";
+
+  const toggleScreen = (nextScreen: Screen) => {
+    changeScreen(screen === nextScreen ? "game" : nextScreen);
   };
-
-  const onHelp = () => changeScreen("help");
-  const onSettings = () => changeScreen("settings");
-
-  const helpActive = store.screen === "help";
-  const settingsActive = store.screen === "settings";
 
   return (
     <Container>
       <GroupLeft style={{ flexGrow: 1 / 4 }}>
-        <Pressable active={helpActive} onPress={onHelp}>
+        <Pressable
+          onHoverIn={() => setHelpHovered(true)}
+          onHoverOut={() => setHelpHovered(false)}
+          onPress={() => toggleScreen("help")}
+          active={helpActive}
+        >
           <Icon name="help-circle" size={22} active={helpActive} />
         </Pressable>
       </GroupLeft>
@@ -84,7 +86,12 @@ const Header = ({ title }: { title: string }) => {
       </GroupMiddle>
 
       <GroupRight style={{ flexGrow: 1 / 4 }}>
-        <Pressable active={settingsActive} onPress={onSettings}>
+        <Pressable
+          onHoverIn={() => setSettingsHovered(true)}
+          onHoverOut={() => setSettingsHovered(false)}
+          onPress={() => toggleScreen("settings")}
+          active={settingsActive}
+        >
           <Icon name="settings" size={22} active={settingsActive} />
         </Pressable>
       </GroupRight>

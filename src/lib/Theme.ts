@@ -13,13 +13,18 @@ type CellColor = {
 };
 
 type Theme = {
-  text: ColorValue;
-  textInverted: ColorValue;
+  label: ColorValue;
+  inverseLabel: ColorValue;
 
+  surface: ColorValue;
+  outline: ColorValue;
   background: ColorValue;
-  toggleBackground: ColorValue;
-  activeToggleBackground: ColorValue;
-  secondaryActiveToggleBackground: ColorValue;
+
+  primary: ColorValue;
+  onPrimary: ColorValue;
+
+  secondary: ColorValue;
+  onSecondary: ColorValue;
 
   key: KeyColor;
   cell: CellColor;

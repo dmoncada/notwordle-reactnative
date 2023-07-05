@@ -16,9 +16,10 @@ const Label = styled.Text<{ state: LetterState }>`
   font-size: 24px;
   font-weight: bold;
   color: ${({ theme, state }) =>
-    ["wrong", "inword", "correct"].includes(state)
-      ? theme.textInverted.toString()
-      : theme.text.toString()};
+    (["wrong", "inword", "correct"].includes(state)
+      ? theme.inverseLabel
+      : theme.label
+    ).toString()};
 `;
 
 const Hint = styled.Text`
@@ -27,7 +28,7 @@ const Hint = styled.Text`
   position: absolute;
   bottom: 30px;
   left: 34px;
-  color: ${({ theme }) => theme.textInverted.toString()};
+  color: ${({ theme }) => theme.inverseLabel.toString()};
 `;
 
 type Props = {

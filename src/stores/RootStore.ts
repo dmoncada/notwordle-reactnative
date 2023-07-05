@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 import { createContext, useContext } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
 import { SettingsStore } from "./SettingsStore";
@@ -6,8 +6,9 @@ import { LetterState } from "../lib/LetterState";
 import {
   StateByLetter,
   getWordFromList,
-  getGuessState,
-  getKeyboardState,
+  updateGuessState,
+  updateKeyboardState,
+  createKeyboardState,
 } from "../lib/utils";
 
 type Screen = "game" | "help" | "settings";
@@ -41,7 +42,7 @@ class RootStore {
       this.previousGuesses = [];
       this.previousGuessesState = [];
       this.previousGuessesHints = [];
-      this.keyboardState = {};
+      this.keyboardState = createKeyboardState();
     });
   };
 
@@ -101,14 +102,14 @@ class RootStore {
       return;
     }
 
-    // Store the current guess.
+    // Store the last guess.
     this.previousGuesses.push(this.currentGuess);
 
-    // Compute the coloring and hint for each letter in the guess.
-    getGuessState(this.currentGuess, this.target, this.previousGuessesState, this.previousGuessesHints);
+    // Update the coloring and hint for each letter in the last guess.
+    updateGuessState(this.currentGuess, this.target, this.previousGuessesState, this.previousGuessesHints);
 
-    // Compute the state for each key in the keyboard.
-    getKeyboardState(this.previousGuesses, this.target, this.keyboardState);
+    // Update the state for each key that was included in the last guess.
+    updateKeyboardState(this.currentGuess, this.previousGuessesState.at(-1), this.keyboardState);
 
     // Clear the current guess.
     this.currentGuess = "";

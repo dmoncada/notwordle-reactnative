@@ -1,6 +1,22 @@
 export const colors = {
   black: "#13141b",
-  white: "white",
+  white: "#ffffff",
+
+  blue0: "#142652",
+  blue1: "#254493",
+  blue2: "#3B65CE",
+  blue3: "#5C81D6",
+  blue4: "#7C9ADE",
+  blue5: "#BECCEF",
+
+  green0: "#273819",
+  green1: "#628d3f",
+  green2: "#76a94c",
+  green3: "#85b65d",
+  green4: "#a0c680",
+  green5: "#e8f3e7",
+
+  yellow: "#ebc450",
 
   gray0: "#191a23",
   gray1: "#3e4053",
@@ -12,10 +28,4 @@ export const colors = {
   gray7: "#dde1ec",
   gray8: "#dfe1e9",
   gray9: "#fbfcff",
-
-  yellow: "#ebc450",
-
-  green0: "#2e4030",
-  green1: "#85b65d",
-  green2: "#e8f3e7",
 };

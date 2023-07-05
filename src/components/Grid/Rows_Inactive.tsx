@@ -4,17 +4,15 @@ import { NUM_GUESSES, useStore } from "../../stores/RootStore";
 import { Row } from "./GridStyles";
 import Cell from "./Cell";
 
-const InactiveRow = () => {
-  return (
-    <Row>
-      <Cell letter="" state="unused" />
-      <Cell letter="" state="unused" />
-      <Cell letter="" state="unused" />
-      <Cell letter="" state="unused" />
-      <Cell letter="" state="unused" />
-    </Row>
-  );
-};
+const InactiveRow = () => (
+  <Row>
+    <Cell letter="" state="unused" />
+    <Cell letter="" state="unused" />
+    <Cell letter="" state="unused" />
+    <Cell letter="" state="unused" />
+    <Cell letter="" state="unused" />
+  </Row>
+);
 
 const InactiveRows = observer(() => {
   const store = useStore();
