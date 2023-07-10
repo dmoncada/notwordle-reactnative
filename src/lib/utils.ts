@@ -1,4 +1,5 @@
 import { Asset } from "expo-asset";
+import { Trie as Dawg } from "tiny-trie";
 import { LetterState } from "./LetterState";
 
 export type CountByLetter = { [letter: string]: number };
@@ -12,8 +13,9 @@ export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_ALPHA.map(
   (letter) => letter.toUpperCase()
 );
 
-export const getWordFromList = async (length: number): Promise<string> => {
+export const getWordListAsync = async (length: number): Promise<string[]> => {
   const module = require("../../assets/data/wordlist.txt");
+
   // Get the asset.
   const [asset] = await Asset.loadAsync(module);
 
@@ -26,15 +28,11 @@ export const getWordFromList = async (length: number): Promise<string> => {
   // Make a list, keep only words of the given length.
   const words = text.split("\n").filter((w) => w.length === length);
 
-  // Get a random word from the list.
-  const word = words[Math.floor(Math.random() * words.length)];
-
-  // Convert to upper, return.
-  return word.toLocaleUpperCase();
+  return words;
 };
 
 export const createKeyboardState = (): StateByLetter =>
-  ASCII_UPPERCASE.reduce((state, letter) => {
+  ASCII_UPPERCASE.reduce((state: StateByLetter, letter: string) => {
     state[letter] = "unused";
     return state;
   }, {});
@@ -54,6 +52,7 @@ export const updateGuessState = (
   for (let i = 0; i < guess.length; i++) {
     const g = guess[i];
     const t = target[i];
+
     if (g === t) {
       state[i] = "correct";
     } else {
@@ -63,6 +62,7 @@ export const updateGuessState = (
 
   for (let i = 0; i < guess.length; i++) {
     const g = guess[i];
+
     if (unmatched[g] && state[i] !== "correct") {
       state[i] = "inword";
       unmatched[g] -= 1;
@@ -71,6 +71,7 @@ export const updateGuessState = (
 
   for (let i = 0; i < guess.length; i++) {
     const g = guess[i];
+
     if (unmatched[g]) {
       hints[i] = unmatched[g] + 1;
       unmatched[g] = 0;
@@ -105,4 +106,19 @@ export const updateKeyboardState = (
       keyboardStateRef[letter] = nextState;
     }
   }
+};
+
+export const pickRandomWordFromDawg = (graph: Dawg): string => {
+  const builder: string[] = [];
+  let node = graph.root;
+
+  while (true) {
+    if (node["\0"]) break;
+    const labels = Object.keys(node);
+    const randomLabel = labels[Math.floor(Math.random() * labels.length)];
+    builder.push(randomLabel);
+    node = node[randomLabel];
+  }
+
+  return builder.join("");
 };

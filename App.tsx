@@ -8,7 +8,9 @@ export default function App() {
 
   const setup = async () => {
     const store = new RootStore();
-    await store.resetAsync();
+    await store.loadWordsAsync();
+    store.reset();
+
     setRootStore(store);
     setLoading(false);
   };

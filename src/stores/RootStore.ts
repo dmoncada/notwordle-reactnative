@@ -1,14 +1,16 @@
-import { Alert, Platform } from "react-native";
+import { Alert } from "react-native";
 import { createContext, useContext } from "react";
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
+import { Trie as Dawg } from "tiny-trie";
 import { SettingsStore } from "./SettingsStore";
 import { LetterState } from "../lib/LetterState";
 import {
   StateByLetter,
-  getWordFromList,
   updateGuessState,
   updateKeyboardState,
   createKeyboardState,
+  getWordListAsync,
+  pickRandomWordFromDawg,
 } from "../lib/utils";
 
 type Screen = "game" | "help" | "settings";
@@ -25,25 +27,34 @@ class RootStore {
   keyboardState: StateByLetter = {};
   settings: SettingsStore = null;
   screen: Screen = "game";
+  words: Dawg = null;
 
   constructor() {
     makeAutoObservable(this);
 
     // Instantiate and initialize the settings store.
     this.settings = new SettingsStore();
+
+    // Instantiate the data structure for storing all words.
+    this.words = new Dawg();
   }
 
-  resetAsync = async () => {
-    const target = await getWordFromList(NUM_LETTERS);
+  loadWordsAsync = async () => {
+    const words = await getWordListAsync(NUM_LETTERS);
+    words.forEach((word) => this.words.insert(word.toLocaleUpperCase()));
+    this.words.freeze();
+  };
 
-    runInAction(() => {
-      this.target = target;
-      this.currentGuess = "";
-      this.previousGuesses = [];
-      this.previousGuessesState = [];
-      this.previousGuessesHints = [];
-      this.keyboardState = createKeyboardState();
-    });
+  reset = () => {
+    const target = pickRandomWordFromDawg(this.words);
+    console.debug(target);
+
+    this.target = target;
+    this.currentGuess = "";
+    this.previousGuesses = [];
+    this.previousGuessesState = [];
+    this.previousGuessesHints = [];
+    this.keyboardState = createKeyboardState();
   };
 
   onKey = (keyPressed: string) => {
@@ -77,17 +88,18 @@ class RootStore {
         {
           text: "OK",
           style: "default",
-          onPress: () => this.resetAsync(),
+          onPress: () => this.reset(),
         },
       ]);
 
       return;
     }
 
-    // if (isValid(currentGuess) === false) {
-    //   // Word invalid.
-    //   // return;
-    // }
+    if (this.words.test(this.currentGuess) === false) {
+      // Word invalid.
+      Alert.alert("Invalid Word.");
+      return;
+    }
 
     if (this.previousGuesses.length === NUM_GUESSES - 1) {
       // Game over...
@@ -95,7 +107,7 @@ class RootStore {
         {
           text: "OK",
           style: "default",
-          onPress: () => this.resetAsync(),
+          onPress: () => this.reset(),
         },
       ]);
 
