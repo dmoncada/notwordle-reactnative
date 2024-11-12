@@ -1,6 +1,8 @@
-import { StyleSheet } from "react-native";
 import { observer } from "mobx-react-lite";
+import { StyleSheet } from "react-native";
 import { styled } from "styled-components/native";
+import { useKeyPress } from "../../hooks/useKeyPress";
+import { ASCII_ALPHA, ASCII_UPPERCASE } from "../../lib/utils";
 import { useStore } from "../../stores/RootStore";
 import Key from "./Key";
 
@@ -20,24 +22,19 @@ const Keyboard = () => {
   const { onKey, onBack, onEnter, keyboardState, settings } = useStore();
   const swapButtons = settings.swapButtons;
 
-  const backKey = (
-    <Key
-      keyCode="BKSP"
-      state="unused"
-      style={styles.metaKey}
-      onPress={onBack}
-      icon="delete"
-    />
-  );
+  useKeyPress([...ASCII_ALPHA, ...ASCII_UPPERCASE, "Backspace", "Enter"], (event) => {
+    const key = event.key;
+    if (key === "Backspace") {
+      onBack();
+    } else if (key === "Enter") {
+      onEnter();
+    } else {
+      onKey(key.toUpperCase());
+    }
+  });
 
-  const enterKey = (
-    <Key
-      keyCode="Enter"
-      state="unused"
-      style={styles.metaKey}
-      onPress={onEnter}
-    />
-  );
+  const backKey = <Key keyCode="BKSP" state="unused" style={styles.metaKey} onPress={onBack} icon="delete" />;
+  const enterKey = <Key keyCode="Enter" state="unused" style={styles.metaKey} onPress={onEnter} />;
 
   return (
     <Container>
