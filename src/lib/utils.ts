@@ -26,7 +26,7 @@ export const getWordListAsync = async (length: number): Promise<string[]> => {
   const text = await file.text();
 
   // Make a list, keep only words of the given length.
-  const words = text.split("\n").filter((w) => w.length === length);
+  const words = text.split(/[\r\n]+/).filter((w) => w.length === length);
 
   return words;
 };
