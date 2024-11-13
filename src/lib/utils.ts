@@ -6,12 +6,35 @@ export type CountByLetter = { [letter: string]: number };
 export type StateByLetter = { [letter: string]: LetterState };
 
 export const ASCII_ALPHA: ReadonlyArray<string> = [
-  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
 ];
 
-export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_ALPHA.map(
-  (letter) => letter.toUpperCase()
-);
+export const ASCII_UPPERCASE: ReadonlyArray<string> = ASCII_ALPHA.map((letter) => letter.toUpperCase());
 
 export const getWordListAsync = async (length: number): Promise<string[]> => {
   const module = require("../../assets/data/wordlist.txt");
@@ -37,19 +60,18 @@ export const createKeyboardState = (): StateByLetter =>
     return state;
   }, {});
 
-export const updateGuessState = (
-  guess: string,
-  target: string,
-  guessStateRef: LetterState[][],
-  guessHintsRef: number[][]
-): void => {
-  const state: LetterState[] = Array(guess.length).fill("wrong");
-  const hints: number[] = Array(guess.length).fill(0);
+export const updateGuessState = (guess: string, target: string): [LetterState[], number[]] => {
+  const gl = guess.length;
+  const tl = target.length;
+  const left = Array(gl).fill("wrong");
+  const right = Array(tl - gl).fill("unused");
+  const state: LetterState[] = left.concat(right);
+  const hints: number[] = Array(tl).fill(0);
   const unmatched: CountByLetter = {};
 
   target.split("").forEach((letter) => (unmatched[letter] = 0));
 
-  for (let i = 0; i < guess.length; i++) {
+  for (let i = 0; i < gl; i++) {
     const g = guess[i];
     const t = target[i];
 
@@ -60,7 +82,7 @@ export const updateGuessState = (
     }
   }
 
-  for (let i = 0; i < guess.length; i++) {
+  for (let i = 0; i < gl; i++) {
     const g = guess[i];
 
     if (unmatched[g] && state[i] !== "correct") {
@@ -69,7 +91,7 @@ export const updateGuessState = (
     }
   }
 
-  for (let i = 0; i < guess.length; i++) {
+  for (let i = 0; i < gl; i++) {
     const g = guess[i];
 
     if (unmatched[g]) {
@@ -78,8 +100,7 @@ export const updateGuessState = (
     }
   }
 
-  guessStateRef.push(state);
-  guessHintsRef.push(hints);
+  return [state, hints];
 };
 
 const getWeight = (state: LetterState) => {

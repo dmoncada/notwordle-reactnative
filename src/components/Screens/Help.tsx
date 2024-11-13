@@ -1,13 +1,6 @@
 import styled from "styled-components/native";
-import { LetterState as State } from "../../lib/LetterState";
+import { updateGuessState } from "../../lib/utils";
 import { CompletedRow } from "../Grid/Rows_Completed";
-
-const target = "FLAME";
-const guess1 = "TABLE";
-const guess2 = "FLASH";
-const state1: State[] = ["wrong", "inword", "wrong", "inword", "correct"];
-const state2: State[] = ["correct", "correct", "correct", "wrong", "wrong"];
-const state3: State[] = Array(5).fill("correct");
 
 const Main = styled.View`
   flex: 1;
@@ -48,6 +41,13 @@ const Text = styled.Text`
 `;
 
 export const Help = () => {
+  const target = "FLAME";
+  const guess1 = "TABLE";
+  const guess2 = "FLASH";
+  const [state1] = updateGuessState(guess1, target);
+  const [state2] = updateGuessState(guess2, target);
+  const [state3] = updateGuessState(target, target);
+
   return (
     <Main>
       <Header>
@@ -56,8 +56,7 @@ export const Help = () => {
       <ScrollView>
         <Content>
           <Text>
-            You have to guess the hidden word in 6 tries and the color of the
-            letters changes to show how close you are.
+            You have to guess the hidden word in 6 tries and the color of the letters changes to show how close you are.
           </Text>
 
           <Text>To start the game, just enter any word, for example:</Text>
@@ -67,7 +66,7 @@ export const Help = () => {
           <Explainer>
             <Text>T, B are not in the target word at all.</Text>
             <Text>A, L is in the word but in the wrong spot.</Text>
-            <Text>E is in the word and in the wrong spot.</Text>
+            <Text>E is in the word and in the correct spot.</Text>
           </Explainer>
 
           <Text>Another try to find matching letters in the target word.</Text>

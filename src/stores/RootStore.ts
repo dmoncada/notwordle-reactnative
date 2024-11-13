@@ -1,17 +1,17 @@
-import { Alert } from "react-native";
-import { createContext, useContext } from "react";
 import { makeAutoObservable } from "mobx";
+import { createContext, useContext } from "react";
+import { Alert } from "react-native";
 import { Trie as Dawg } from "tiny-trie";
-import { SettingsStore } from "./SettingsStore";
 import { LetterState } from "../lib/LetterState";
 import {
   StateByLetter,
-  updateGuessState,
-  updateKeyboardState,
   createKeyboardState,
   getWordListAsync,
   pickRandomWordFromDawg,
+  updateGuessState,
+  updateKeyboardState,
 } from "../lib/utils";
+import { SettingsStore } from "./SettingsStore";
 
 type Screen = "game" | "help" | "settings";
 
@@ -118,10 +118,12 @@ class RootStore {
     this.previousGuesses.push(this.currentGuess);
 
     // Update the coloring and hint for each letter in the last guess.
-    updateGuessState(this.currentGuess, this.target, this.previousGuessesState, this.previousGuessesHints);
+    const [state, hints] = updateGuessState(this.currentGuess, this.target);
+    this.previousGuessesState.push(state);
+    this.previousGuessesHints.push(hints);
 
     // Update the state for each key that was included in the last guess.
-    updateKeyboardState(this.currentGuess, this.previousGuessesState.at(-1), this.keyboardState);
+    updateKeyboardState(this.currentGuess, state, this.keyboardState);
 
     // Clear the current guess.
     this.currentGuess = "";
@@ -138,11 +140,4 @@ const RootStoreContext = createContext<RootStore>(null);
 const RootStoreProvider = RootStoreContext.Provider;
 const useStore = () => useContext(RootStoreContext);
 
-export {
-  NUM_LETTERS,
-  NUM_GUESSES,
-  Screen,
-  RootStore,
-  RootStoreProvider,
-  useStore,
-};
+export { NUM_GUESSES, NUM_LETTERS, RootStore, RootStoreProvider, Screen, useStore };
