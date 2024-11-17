@@ -6,6 +6,8 @@ import { Feather } from "@expo/vector-icons";
 import { Screen, useStore } from "../stores/RootStore";
 import { colors } from "../lib/colors";
 
+type Glyph = keyof typeof Feather.glyphMap;
+
 const Container = styled.View`
   display: flex;
   flex-direction: row;
@@ -39,8 +41,7 @@ const Pressable = styled.Pressable<{ active: boolean }>`
   width: 35px;
   height: 35px;
   border-radius: 8px;
-  background-color: ${({ theme, active }) =>
-    (active ? theme.primary : theme.surface).toString()};
+  background-color: ${({ theme, active }) => (active ? theme.primary : theme.surface).toString()};
   align-items: center;
   justify-content: center;
 `;
@@ -52,17 +53,27 @@ const Title = styled.Text`
 `;
 
 const Icon = styled(Feather)<{ active?: boolean }>`
-  color: ${({ theme, active }) =>
-    (active ? theme.onPrimary : theme.outline).toString()};
+  color: ${({ theme, active }) => (active ? theme.onPrimary : theme.outline).toString()};
 `;
+
+const IconButton = (props: { iconName: Glyph; selected: boolean; onPress: () => void }) => {
+  const { iconName, selected, onPress } = props;
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Pressable
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      active={selected || hovered}
+      onPress={onPress}
+    >
+      <Icon name={iconName} size={22} active={selected || hovered} />
+    </Pressable>
+  );
+};
 
 const Header = ({ title }: { title: string }) => {
   const { screen, changeScreen } = useStore();
-  const [helpHovered, setHelpHovered] = useState(false);
-  const [settingsHovered, setSettingsHovered] = useState(false);
-
-  const helpActive = helpHovered || screen === "help";
-  const settingsActive = settingsHovered || screen === "settings";
 
   const toggleScreen = (nextScreen: Screen) => {
     changeScreen(screen === nextScreen ? "game" : nextScreen);
@@ -71,14 +82,7 @@ const Header = ({ title }: { title: string }) => {
   return (
     <Container>
       <GroupLeft style={{ flexGrow: 1 / 4 }}>
-        <Pressable
-          onHoverIn={() => setHelpHovered(true)}
-          onHoverOut={() => setHelpHovered(false)}
-          onPress={() => toggleScreen("help")}
-          active={helpActive}
-        >
-          <Icon name="help-circle" size={22} active={helpActive} />
-        </Pressable>
+        <IconButton iconName="help-circle" selected={screen === "help"} onPress={() => toggleScreen("help")} />
       </GroupLeft>
 
       <GroupMiddle style={{ flexGrow: 1 / 2 }}>
@@ -86,14 +90,7 @@ const Header = ({ title }: { title: string }) => {
       </GroupMiddle>
 
       <GroupRight style={{ flexGrow: 1 / 4 }}>
-        <Pressable
-          onHoverIn={() => setSettingsHovered(true)}
-          onHoverOut={() => setSettingsHovered(false)}
-          onPress={() => toggleScreen("settings")}
-          active={settingsActive}
-        >
-          <Icon name="settings" size={22} active={settingsActive} />
-        </Pressable>
+        <IconButton iconName="settings" selected={screen === "settings"} onPress={() => toggleScreen("settings")} />
       </GroupRight>
     </Container>
   );
